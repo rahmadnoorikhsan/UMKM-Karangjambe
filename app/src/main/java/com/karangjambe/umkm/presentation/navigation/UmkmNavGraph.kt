@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.karangjambe.umkm.presentation.screen.detail.detailScreenRoute
 import com.karangjambe.umkm.presentation.screen.home.homeScreenRoute
 import com.karangjambe.umkm.presentation.screen.splash.splashScreenRoute
 
@@ -19,5 +20,6 @@ fun UmkmNavGraph(
     ) {
         splashScreenRoute(navController)
         homeScreenRoute(navController)
+        detailScreenRoute(navController)
     }
 }

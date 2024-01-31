@@ -7,6 +7,6 @@ import com.karangjambe.umkm.presentation.navigation.Screen
 
 fun NavGraphBuilder.homeScreenRoute(navController: NavController) {
     composable(Screen.Home.route) {
-        HomeScreen()
+        HomeScreen(navController)
     }
 }
