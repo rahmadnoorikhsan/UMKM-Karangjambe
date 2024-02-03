@@ -49,6 +49,7 @@ fun HomeScreen(
         query = state.query,
         onQueryChange = {
             homeViewModel.onEvent(HomeEvent.OnQueryChange(it))
+            homeViewModel.onEvent(HomeEvent.OnSearch(it))
         },
         onSearch = {
             homeViewModel.onEvent(HomeEvent.OnSearch(it))
