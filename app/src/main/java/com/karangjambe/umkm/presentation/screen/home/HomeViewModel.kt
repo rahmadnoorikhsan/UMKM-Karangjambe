@@ -23,6 +23,48 @@ class HomeViewModel @Inject constructor(
         getProducts()
     }
 
+    fun onEvent(event: HomeEvent) {
+        when (event) {
+            is HomeEvent.OnSearch -> getSearch(event.query)
+            is HomeEvent.OnQueryChange -> _state.update {
+                it.copy(
+                    query = event.query
+                )
+            }
+        }
+    }
+
+    private fun getSearch(query: String) = viewModelScope.launch {
+        productRepository.getSearch(query).collect { result ->
+            when (result) {
+                is Result.Error -> _state.update {
+                    it.copy(
+                        isLoading = false,
+                        isError = true,
+                        statusMessage = result.message
+                    )
+                }
+
+                is Result.Loading -> _state.update {
+                    it.copy(
+                        isLoading = true,
+                        isError = false,
+                        statusMessage = null
+                    )
+                }
+
+                is Result.Success -> _state.update {
+                    it.copy(
+                        isLoading = false,
+                        isError = false,
+                        statusMessage = null,
+                        products = result.data
+                    )
+                }
+            }
+        }
+    }
+
     private fun getProducts() = viewModelScope.launch {
         productRepository.getProducts().collect { result ->
             when (result) {
@@ -41,6 +83,7 @@ class HomeViewModel @Inject constructor(
                         statusMessage = null
                     )
                 }
+
                 is Result.Success -> _state.update {
                     it.copy(
                         isLoading = false,

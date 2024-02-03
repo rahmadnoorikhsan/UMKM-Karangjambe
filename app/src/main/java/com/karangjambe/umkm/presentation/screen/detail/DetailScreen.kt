@@ -71,7 +71,8 @@ fun DetailContent(
     ConstraintLayout(modifier = modifier.fillMaxSize()) {
         val (imageRefs, topBarRefs, titleRefs, priceRefs, priceDiscountRefs, discountRefs, descriptionRefs, bottomBarRefs) = createRefs()
 
-        val priceInt = detailProduct.price?.toInt()
+        val priceInt = detailProduct.price?.toInt() ?: 0
+        val discountInt = detailProduct.discount?.toInt()
 
         AsyncImage(
             model = detailProduct.image?.let { image -> imageUrl(image) },
@@ -118,9 +119,11 @@ fun DetailContent(
                     end.linkTo(parent.end)
                 }
         )
-        if (detailProduct.discount != null) {
+        if (discountInt != null) {
+            val totalDiscount = priceInt * discountInt / 100
+            val total = priceInt - totalDiscount
             Text(
-                text = priceInt?.toCurrencyFormat() ?: "",
+                text = total.toCurrencyFormat(),
                 style = MaterialTheme.typography.headlineSmall.copy(
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.SemiBold
@@ -131,7 +134,7 @@ fun DetailContent(
                 }
             )
             Text(
-                text = priceInt?.toCurrencyFormat() ?: "",
+                text = priceInt.toCurrencyFormat(),
                 style = MaterialTheme.typography.titleSmall.copy(
                     textDecoration = TextDecoration.LineThrough,
                     fontWeight = FontWeight.Light,
@@ -161,7 +164,7 @@ fun DetailContent(
             )
         } else {
             Text(
-                text = priceInt?.toCurrencyFormat() ?: "",
+                text = priceInt.toCurrencyFormat(),
                 style = MaterialTheme.typography.headlineSmall.copy(
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.SemiBold

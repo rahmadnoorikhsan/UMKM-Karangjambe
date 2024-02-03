@@ -32,6 +32,7 @@ fun ProductItem(
     modifier: Modifier = Modifier,
 ) {
     val priceInt = price.toInt()
+    val discountInt = discount?.toInt()
 
     ConstraintLayout(
         modifier = modifier
@@ -68,12 +69,12 @@ fun ProductItem(
                     end.linkTo(imageRefs.end)
                 }
         )
-        if (discount != null) {
-//            val total = price * discount / 100
+        if (discountInt != null) {
+            val totalDiscount = priceInt * discountInt / 100
+            val total = priceInt - totalDiscount
 
             Text(
-//                text = total.toCurrencyFormat(),
-                text = priceInt.toCurrencyFormat(),
+                text = total.toCurrencyFormat(),
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.primary
@@ -87,7 +88,6 @@ fun ProductItem(
                     }
             )
             Text(
-//                text = price.toCurrencyFormat()
                 text = priceInt.toCurrencyFormat(),
                 style = MaterialTheme.typography.labelMedium.copy(
                     textDecoration = TextDecoration.LineThrough,
@@ -117,7 +117,6 @@ fun ProductItem(
             )
         } else {
             Text(
-//                text = price.toCurrencyFormat(),
                 text = priceInt.toCurrencyFormat(),
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontWeight = FontWeight.SemiBold,

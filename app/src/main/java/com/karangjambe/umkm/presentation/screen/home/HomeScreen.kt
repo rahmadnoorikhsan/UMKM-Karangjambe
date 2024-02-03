@@ -3,23 +3,29 @@ package com.karangjambe.umkm.presentation.screen.home
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -39,13 +45,22 @@ fun HomeScreen(
 
     HomeContent(
         navController = navController,
-        products = state.products
+        products = state.products,
+        query = state.query,
+        onQueryChange = {
+            homeViewModel.onEvent(HomeEvent.OnQueryChange(it))
+        },
+        onSearch = {
+            homeViewModel.onEvent(HomeEvent.OnSearch(it))
+        }
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeContent(
+    query: String,
+    onQueryChange: (String) -> Unit,
+    onSearch: (String) -> Unit,
     navController: NavController,
     products: List<ProductItem>,
     modifier: Modifier = Modifier,
@@ -53,6 +68,7 @@ fun HomeContent(
 
     ConstraintLayout(modifier = modifier) {
         val (bannerRefs, searchRefs, listRefs) = createRefs()
+        val focusManager = LocalFocusManager.current
 
         Image(
             painter = painterResource(R.drawable.banner),
@@ -66,20 +82,41 @@ fun HomeContent(
                     end.linkTo(parent.end)
                 }
         )
-        SearchBar(
-            query = "",
-            onQueryChange = {},
-            onSearch = {},
-            active = false,
-            onActiveChange = {},
-            shape = MaterialTheme.shapes.large,
-            leadingIcon = {
-                Icon(imageVector = Icons.Default.Search, contentDescription = "Search Icon")
-            },
+        TextField(
+            value = query,
+            onValueChange = onQueryChange,
             placeholder = {
                 Text(text = "Cari Produk")
             },
+            maxLines = 1,
+            trailingIcon = {
+                if (query.isNotBlank()) {
+                    IconButton(onClick = { onQueryChange("") }) {
+                        Icon(imageVector = Icons.Default.Close, contentDescription = "Clear Icon")
+                    }
+                }
+            },
+            leadingIcon = {
+                Icon(imageVector = Icons.Default.Search, contentDescription = "Search Icon")
+            },
+            colors = TextFieldDefaults.colors(
+                disabledTextColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent
+            ),
+            shape = MaterialTheme.shapes.medium,
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Search,
+            ),
+            keyboardActions = KeyboardActions(
+                onSearch = {
+                    onSearch(query)
+                    focusManager.clearFocus()
+                }
+            ),
             modifier = Modifier
+                .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .constrainAs(searchRefs) {
                     top.linkTo(bannerRefs.bottom)
@@ -87,8 +124,7 @@ fun HomeContent(
                     start.linkTo(bannerRefs.start)
                     end.linkTo(bannerRefs.end)
                 }
-                .offset(y = -(20).dp)
-        ) {}
+        )
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             horizontalArrangement = Arrangement.spacedBy(16.dp),

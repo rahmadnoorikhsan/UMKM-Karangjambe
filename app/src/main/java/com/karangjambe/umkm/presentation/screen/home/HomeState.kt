@@ -6,5 +6,6 @@ data class HomeState(
     val isLoading: Boolean = false,
     val isError: Boolean = false,
     val statusMessage: String? = null,
+    val query: String = "",
     val products: List<ProductItem> = emptyList(),
 )
