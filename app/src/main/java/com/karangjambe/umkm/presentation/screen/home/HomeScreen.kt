@@ -34,8 +34,9 @@ import androidx.navigation.NavController
 import com.karangjambe.umkm.R
 import com.karangjambe.umkm.data.source.remote.response.ProductItem
 import com.karangjambe.umkm.presentation.navigation.Screen
-import com.karangjambe.umkm.presentation.screen.home.composable.ProductItemShimmer
+import com.karangjambe.umkm.presentation.screen.home.composable.EmptyScreen
 import com.karangjambe.umkm.presentation.screen.home.composable.ProductItem
+import com.karangjambe.umkm.presentation.screen.home.composable.ProductItemShimmer
 
 @Composable
 fun HomeScreen(
@@ -129,32 +130,70 @@ fun HomeContent(
                     end.linkTo(bannerRefs.end)
                 }
         )
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .constrainAs(listRefs) {
-                    top.linkTo(searchRefs.bottom, 16.dp)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    bottom.linkTo(parent.bottom)
-                }
-        ) {
-            items(products) {
-                if (isLoading) {
+        if (isLoading) {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .constrainAs(listRefs) {
+                        top.linkTo(searchRefs.bottom, 16.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        bottom.linkTo(parent.bottom)
+                    }
+            ) {
+                item {
                     ProductItemShimmer()
-                } else {
-                    ProductItem(
-                        imageUrl = it.image ?: "",
-                        name = it.name ?: "",
-                        price = it.price ?: "",
-                        discount = it.discount,
-                        navigateToDetail = {
-                            navController.navigate(Screen.Detail.createRoute(it.id ?: 0))
+                }
+                item {
+                    ProductItemShimmer()
+                }
+                item {
+                    ProductItemShimmer()
+                }
+                item {
+                    ProductItemShimmer()
+
+                }
+            }
+        } else {
+            if (products.isEmpty()) {
+                EmptyScreen(
+                    modifier = Modifier
+                        .constrainAs(listRefs) {
+                            top.linkTo(searchRefs.bottom)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                            bottom.linkTo(parent.bottom, 32.dp)
                         }
-                    )
+                )
+            } else {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .constrainAs(listRefs) {
+                            top.linkTo(searchRefs.bottom, 16.dp)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                            bottom.linkTo(parent.bottom)
+                        }
+                ) {
+                    items(products) {
+                        ProductItem(
+                            imageUrl = it.image ?: "",
+                            name = it.name ?: "",
+                            price = it.price ?: "",
+                            discount = it.discount,
+                            navigateToDetail = {
+                                navController.navigate(Screen.Detail.createRoute(it.id ?: 0))
+                            }
+                        )
+                    }
                 }
             }
         }
