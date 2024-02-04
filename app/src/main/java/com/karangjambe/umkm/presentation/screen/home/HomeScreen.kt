@@ -34,6 +34,7 @@ import androidx.navigation.NavController
 import com.karangjambe.umkm.R
 import com.karangjambe.umkm.data.source.remote.response.ProductItem
 import com.karangjambe.umkm.presentation.navigation.Screen
+import com.karangjambe.umkm.presentation.screen.home.composable.ProductItemShimmer
 import com.karangjambe.umkm.presentation.screen.home.composable.ProductItem
 
 @Composable
@@ -47,6 +48,7 @@ fun HomeScreen(
         navController = navController,
         products = state.products,
         query = state.query,
+        isLoading = state.isLoading,
         onQueryChange = {
             homeViewModel.onEvent(HomeEvent.OnQueryChange(it))
             homeViewModel.onEvent(HomeEvent.OnSearch(it))
@@ -60,6 +62,7 @@ fun HomeScreen(
 @Composable
 fun HomeContent(
     query: String,
+    isLoading: Boolean,
     onQueryChange: (String) -> Unit,
     onSearch: (String) -> Unit,
     navController: NavController,
@@ -140,15 +143,19 @@ fun HomeContent(
                 }
         ) {
             items(products) {
-                ProductItem(
-                    imageUrl = it.image ?: "",
-                    name = it.name ?: "",
-                    price = it.price ?: "",
-                    discount = it.discount,
-                    navigateToDetail = {
-                        navController.navigate(Screen.Detail.createRoute(it.id ?: 0))
-                    }
-                )
+                if (isLoading) {
+                    ProductItemShimmer()
+                } else {
+                    ProductItem(
+                        imageUrl = it.image ?: "",
+                        name = it.name ?: "",
+                        price = it.price ?: "",
+                        discount = it.discount,
+                        navigateToDetail = {
+                            navController.navigate(Screen.Detail.createRoute(it.id ?: 0))
+                        }
+                    )
+                }
             }
         }
     }

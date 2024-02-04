@@ -36,6 +36,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.karangjambe.umkm.data.source.remote.response.DetailProduct
+import com.karangjambe.umkm.presentation.screen.detail.composable.DetailShimmerScreen
 import com.karangjambe.umkm.utils.Converter.toCurrencyFormat
 import com.karangjambe.umkm.utils.imageUrl
 import com.karangjambe.umkm.utils.openWhatsAppChat
@@ -53,11 +54,15 @@ fun DetailScreen(
         detailViewModel.onEvent(DetailEvent.OnGetDetailProduct(id))
     }
 
-    DetailContent(
-        navController = navController,
-        detailProduct = state.detailProduct,
-        context = context
-    )
+    if (state.isLoading) {
+        DetailShimmerScreen()
+    } else {
+        DetailContent(
+            navController = navController,
+            detailProduct = state.detailProduct,
+            context = context
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -208,7 +213,7 @@ fun DetailContent(
                 }
         ) {
             Button(
-                onClick = { openWhatsAppChat(context, "+62 ${detailProduct.user?.phone}", "Halo") },
+                onClick = { openWhatsAppChat(context, "+62 ${detailProduct.user?.phone}", "Assalamu'alaikum\nSaya ingin memesan ${detailProduct.name}") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
