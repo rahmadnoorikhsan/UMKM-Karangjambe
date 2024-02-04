@@ -175,17 +175,19 @@ fun DetailContent(
                     }
             )
         } else {
-            Text(
-                text = priceInt.toCurrencyFormat(),
-                style = MaterialTheme.typography.headlineSmall.copy(
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.SemiBold
-                ),
-                modifier = Modifier.constrainAs(priceRefs) {
-                    top.linkTo(imageRefs.bottom, 16.dp)
-                    start.linkTo(parent.start, 16.dp)
-                }
-            )
+            if (priceInt != 0) {
+                Text(
+                    text = priceInt.toCurrencyFormat(),
+                    style = MaterialTheme.typography.headlineSmall.copy(
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.SemiBold
+                    ),
+                    modifier = Modifier.constrainAs(priceRefs) {
+                        top.linkTo(imageRefs.bottom, 16.dp)
+                        start.linkTo(parent.start, 16.dp)
+                    }
+                )
+            }
         }
         Text(
             text = detailProduct.name ?: "",
@@ -219,19 +221,21 @@ fun DetailContent(
                     bottom.linkTo(parent.bottom)
                 }
         ) {
-            Button(
-                onClick = {
-                    openWhatsAppChat(
-                        context,
-                        "+62 ${detailProduct.user?.phone}",
-                        "Assalamu'alaikum\nSaya ingin memesan ${detailProduct.name}"
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Text(text = "Pesan")
+            if (detailProduct.name != null) {
+                Button(
+                    onClick = {
+                        openWhatsAppChat(
+                            context,
+                            "+62 ${detailProduct.user?.phone}",
+                            "Assalamu'alaikum\nSaya ingin memesan ${detailProduct.name}"
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    Text(text = "Pesan")
+                }
             }
         }
     }
