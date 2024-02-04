@@ -6,7 +6,9 @@ import androidx.navigation.compose.composable
 import com.karangjambe.umkm.presentation.navigation.Screen
 
 fun NavGraphBuilder.homeScreenRoute(navController: NavController) {
-    composable(Screen.Home.route) {
+    composable(
+        route = Screen.Home.route
+    ) {
         HomeScreen(navController)
     }
 }
