@@ -7,7 +7,7 @@ import android.net.Uri
 import java.net.URLEncoder
 
 fun openWhatsAppChat(context: Context, toNumber: String, message: String) {
-    val url = "https://api.whatsapp.com/send?phone=" + toNumber + "&text=" + URLEncoder.encode(
+    val url = "https://api.whatsapp.com/send?phone=$toNumber&text=" + URLEncoder.encode(
         message,
         "UTF-8"
     )

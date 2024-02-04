@@ -12,7 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.karangjambe.umkm.presentation.navigation.Screen
 
-fun NavGraphBuilder.detailScreenRoute(navController: NavController) {
+fun NavGraphBuilder.detailScreenRoute(showSnackBarMessage: (String) -> Unit, navController: NavController) {
     composable(
         route = Screen.Detail.route,
         arguments = listOf(
@@ -49,6 +49,10 @@ fun NavGraphBuilder.detailScreenRoute(navController: NavController) {
     ) {
         val id = it.arguments?.getInt("id", 0)
 
-        DetailScreen(navController = navController, id = id ?: 0)
+        DetailScreen(
+            id = id ?: 0,
+            showSnackBarMessage = showSnackBarMessage,
+            navController = navController,
+        )
     }
 }

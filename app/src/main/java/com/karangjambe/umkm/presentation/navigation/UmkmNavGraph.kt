@@ -11,6 +11,7 @@ import com.karangjambe.umkm.presentation.screen.splash.splashScreenRoute
 @Composable
 fun UmkmNavGraph(
     navController: NavHostController,
+    showSnackBarMessage: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     NavHost(
@@ -18,8 +19,8 @@ fun UmkmNavGraph(
         startDestination = Screen.Splash.route,
         modifier = modifier
     ) {
-        splashScreenRoute(navController)
-        homeScreenRoute(navController)
-        detailScreenRoute(navController)
+        splashScreenRoute(navController = navController)
+        homeScreenRoute(showSnackBarMessage = showSnackBarMessage, navController = navController)
+        detailScreenRoute(showSnackBarMessage = showSnackBarMessage, navController = navController)
     }
 }

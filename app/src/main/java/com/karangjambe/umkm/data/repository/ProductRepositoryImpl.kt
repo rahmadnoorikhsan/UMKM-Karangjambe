@@ -5,10 +5,12 @@ import com.karangjambe.umkm.data.source.remote.response.DetailProduct
 import com.karangjambe.umkm.data.source.remote.response.ProductItem
 import com.karangjambe.umkm.domain.common.Result
 import com.karangjambe.umkm.domain.repository.ProductRepository
+import com.karangjambe.umkm.utils.Constants.ERROR_MESSAGE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import retrofit2.HttpException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,8 +24,12 @@ class ProductRepositoryImpl @Inject constructor(
             val response = remoteDataSource.getProducts()
             val result = response.data
             emit(Result.Success(result))
+        } catch (e: HttpException) {
+            e.printStackTrace()
+            emit(Result.Error(e.message()))
         } catch (e: Exception) {
-            emit(Result.Error(e.message))
+            e.printStackTrace()
+            emit(Result.Error(ERROR_MESSAGE))
         }
     }.flowOn(Dispatchers.IO)
 
@@ -33,8 +39,12 @@ class ProductRepositoryImpl @Inject constructor(
             val response = remoteDataSource.getProductById(id)
             val result = response.data
             emit(Result.Success(result))
+        } catch (e: HttpException) {
+            e.printStackTrace()
+            emit(Result.Error(e.message()))
         } catch (e: Exception) {
-            emit(Result.Error(e.message))
+            e.printStackTrace()
+            emit(Result.Error(ERROR_MESSAGE))
         }
     }.flowOn(Dispatchers.IO)
 
@@ -45,8 +55,12 @@ class ProductRepositoryImpl @Inject constructor(
                 val response = remoteDataSource.getSearch(query)
                 val result = response.data
                 if (result != null) emit(Result.Success(result))
+            } catch (e: HttpException) {
+                e.printStackTrace()
+                emit(Result.Error(e.message()))
             } catch (e: Exception) {
-                emit(Result.Error(e.message))
+                e.printStackTrace()
+                emit(Result.Error(ERROR_MESSAGE))
             }
         }.flowOn(Dispatchers.IO)
 }

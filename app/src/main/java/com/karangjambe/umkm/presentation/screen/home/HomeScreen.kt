@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,9 +42,16 @@ import com.karangjambe.umkm.presentation.screen.home.composable.ProductItemShimm
 @Composable
 fun HomeScreen(
     navController: NavController,
+    showSnackBarMessage: (String) -> Unit,
     homeViewModel: HomeViewModel = hiltViewModel(),
 ) {
     val state by homeViewModel.state.collectAsStateWithLifecycle()
+
+    state.statusMessage?.let {
+        LaunchedEffect(state.isError) {
+            showSnackBarMessage(it)
+        }
+    }
 
     HomeContent(
         navController = navController,

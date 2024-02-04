@@ -5,10 +5,16 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.karangjambe.umkm.presentation.navigation.Screen
 
-fun NavGraphBuilder.homeScreenRoute(navController: NavController) {
+fun NavGraphBuilder.homeScreenRoute(
+    showSnackBarMessage: (String) -> Unit,
+    navController: NavController
+) {
     composable(
         route = Screen.Home.route
     ) {
-        HomeScreen(navController)
+        HomeScreen(
+            showSnackBarMessage = showSnackBarMessage,
+            navController = navController
+        )
     }
 }

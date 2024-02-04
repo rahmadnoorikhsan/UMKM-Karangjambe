@@ -45,13 +45,20 @@ import com.karangjambe.umkm.utils.openWhatsAppChat
 fun DetailScreen(
     id: Int,
     navController: NavController,
+    showSnackBarMessage: (String) -> Unit,
     detailViewModel: DetailViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
     val state by detailViewModel.state.collectAsStateWithLifecycle()
 
-    LaunchedEffect(key1 = id) {
+    LaunchedEffect(id) {
         detailViewModel.onEvent(DetailEvent.OnGetDetailProduct(id))
+    }
+
+    state.statusMessage?.let {
+        LaunchedEffect(state.isError) {
+            showSnackBarMessage(it)
+        }
     }
 
     if (state.isLoading) {
@@ -213,7 +220,13 @@ fun DetailContent(
                 }
         ) {
             Button(
-                onClick = { openWhatsAppChat(context, "+62 ${detailProduct.user?.phone}", "Assalamu'alaikum\nSaya ingin memesan ${detailProduct.name}") },
+                onClick = {
+                    openWhatsAppChat(
+                        context,
+                        "+62 ${detailProduct.user?.phone}",
+                        "Assalamu'alaikum\nSaya ingin memesan ${detailProduct.name}"
+                    )
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
