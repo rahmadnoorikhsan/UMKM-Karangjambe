@@ -11,7 +11,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -102,12 +101,12 @@ fun ProductItem(
             Text(
                 text = "-$discount%",
                 style = MaterialTheme.typography.labelMedium.copy(
-                    color = Color.Red,
+                    color = MaterialTheme.colorScheme.onTertiaryContainer,
                     fontWeight = FontWeight.Medium
                 ),
                 modifier = Modifier
                     .clip(MaterialTheme.shapes.extraSmall)
-                    .background(Color.Yellow)
+                    .background(MaterialTheme.colorScheme.tertiaryContainer)
                     .padding(horizontal = 2.dp)
                     .constrainAs(discountRefs) {
                         top.linkTo(originalPriceRefs.top)

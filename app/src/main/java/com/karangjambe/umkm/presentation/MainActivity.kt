@@ -28,7 +28,7 @@ class MainActivity : ComponentActivity() {
                     SideEffect {
                         systemUiController.setSystemBarsColor(
                             Color.Black.copy(
-                                alpha = 0.2f
+                                alpha = 0.4f
                             ),
                             darkIcons = false
                         )
